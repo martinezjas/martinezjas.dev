@@ -6,20 +6,20 @@ import requests
 import json
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'd3f1fdf354bc63bc3c348ddf4abd39fe'
+app.config["SECRET_KEY"] = "d3f1fdf354bc63bc3c348ddf4abd39fe"
 
 
-@app.route('/favicon.ico')
+@app.route("/favicon.ico")
 def favicon():
-    return url_for('static', filename='images/favicon/favicon.ico')
+    return url_for("static", filename="images/favicon/favicon.ico")
 
 
-@app.route('/')
+@app.route("/")
 def homepage():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/himnario', methods=['POST', 'GET'])
+@app.route("/himnario", methods=["POST", "GET"])
 def himnario():
     form = hymn_form()
     if form.validate_on_submit():
@@ -27,28 +27,51 @@ def himnario():
         hymn_option = form.option.data
         try:
             response = requests.get(
-                'https://sdah.my.to/hymn/' + str(hymn_number), timeout=15)
+                "https://sdah.my.to/hymn/" + str(hymn_number), timeout=15
+            )
             response.raise_for_status()
             json_data = response.json()
-            audio_url, title, number, lyrics, bg_url, icon, super_theme, sub_theme = pull_data(
-                hymn_option, json_data, hymn_number)
-            return render_template('himnario_play.html', audio_url=audio_url, title=title,
-                                   number=number, lyrics=lyrics, bg_url=bg_url, icon=icon, super_theme=super_theme, sub_theme=sub_theme)
+            (
+                audio_url,
+                title,
+                number,
+                lyrics,
+                bg_url,
+                icon,
+                super_theme,
+                sub_theme,
+            ) = pull_data(hymn_option, json_data, hymn_number)
+            return render_template(
+                "himnario_play.html",
+                audio_url=audio_url,
+                title=title,
+                number=number,
+                lyrics=lyrics,
+                bg_url=bg_url,
+                icon=icon,
+                super_theme=super_theme,
+                sub_theme=sub_theme,
+            )
         except HTTPError as http_err:
-            return render_template('error_handle.html',
-                                   message='An HTTP error occurred: ' + str(http_err))
+            return render_template(
+                "error_handle.html", message="An HTTP error occurred: " + str(http_err)
+            )
         except Exception as err:
-            return render_template('error_handle.html',
-                                   message='An non-HTTP error occurred: ' + str(err))
+            return render_template(
+                "error_handle.html", message="An non-HTTP error occurred: " + str(err)
+            )
     else:
-        return render_template('himnario_search.html', form=form)
+        return render_template("himnario_search.html", form=form)
 
 
-@app.route('/hdoc')
+@app.route("/hdoc")
 def hdoc():
-    return render_template('himnario_doc.html')
+    return render_template("himnario_doc.html")
 
 
-@app.route('/bible')
+@app.route("/bible")
 def bible():
-    return render_template('bible.html')
+    return render_template("bible.html")
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
