@@ -1,30 +1,29 @@
 function isScreenLockSupported() {
-  return ('wakeLock' in navigator);
- }
+  return "wakeLock" in navigator;
+}
 async function getScreenLock() {
-  if(isScreenLockSupported()){
+  if (isScreenLockSupported()) {
     let screenLock;
     try {
-       screenLock = await navigator.wakeLock.request('screen');
-    } catch(err) {
-       console.log(err.name, err.message);
+      screenLock = await navigator.wakeLock.request("screen");
+    } catch (err) {
+      console.log(err.name, err.message);
     }
     return screenLock;
   }
 }
-function release() { 
-  if(typeof screenLock !== "undefined" && screenLock != null) {
-    screenLock.release()
-    .then(() => {
+function release() {
+  if (typeof screenLock !== "undefined" && screenLock != null) {
+    screenLock.release().then(() => {
       console.log("Lock released 🎈");
       screenLock = null;
     });
   }
 }
 getScreenLock();
-document.addEventListener('visibilitychange', async () => {
-  if (screenLock !== null && document.visibilityState === 'visible') {
-    screenLock = await navigator.wakeLock.request('screen');
+document.addEventListener("visibilitychange", async () => {
+  if (screenLock !== null && document.visibilityState === "visible") {
+    screenLock = await navigator.wakeLock.request("screen");
   }
 });
 document.getElementById("audio").addEventListener("ended", function () {
@@ -69,7 +68,7 @@ audio.addEventListener(
       }
     }, 500);
   },
-  false
+  false,
 );
 var myDocument = document.documentElement;
 var myButton = document.getElementById("fullscreen-btn");
@@ -85,7 +84,7 @@ function toggleFullscreen() {
       document.documentElement.mozRequestFullScreen();
     } else if (document.documentElement.webkitRequestFullScreen) {
       document.documentElement.webkitRequestFullScreen(
-        Element.ALLOW_KEYBOARD_INPUT
+        Element.ALLOW_KEYBOARD_INPUT,
       );
     }
   } else {
@@ -112,7 +111,18 @@ myDocument.addEventListener("keydown", function (e) {
 
 var leftButton = document.getElementById("go-back");
 var rightButton = document.getElementById("go-forward");
+var playButton = document.getElementById("play");
 var firstClick = false;
+
+function play() {
+  if (!firstClick) {
+    audio.play();
+    firstClick = true;
+  } else {
+    audio.pause();
+    firstClick = false;
+  }
+}
 
 function goBack() {
   hasBreak = true;
@@ -126,7 +136,7 @@ function goBack() {
   }
   document.getElementById("lyrics").innerHTML = res[i].verse.content.replace(
     /(\.\s+|;\s+|!\s+|\?\s+)/g,
-    "$1<br>"
+    "$1<br>",
   );
   verse_number = res[i].verse.number;
   if (verse_number == 0) {
@@ -156,7 +166,7 @@ function goForward() {
   }
   document.getElementById("lyrics").innerHTML = res[i].verse.content.replace(
     /(\.\s+|;\s+|!\s+|\?\s+)/g,
-    "$1<br>"
+    "$1<br>",
   );
   verse_number = res[i].verse.number;
   if (verse_number == 0) {
@@ -170,6 +180,8 @@ function goForward() {
     document.getElementById("end_icon").hidden = true;
   }
 }
+
+playButton.addEventListener("click", play);
 
 leftButton.addEventListener("click", goBack);
 myDocument.addEventListener("keydown", function (e) {

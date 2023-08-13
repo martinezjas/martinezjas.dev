@@ -78,19 +78,19 @@
         id="title-div"
         class="d-flex flex-column min-vh-100 justify-content-center align-items-center"
       >
-        <h1 id="title" class="display-3 text-white">
+        <h1 id="title" class="text-white display-4">
           {{number}} | <em>{{title}}</em>
         </h1>
         <br />
-        <h5 id="themes" class="text-white">{{super_theme}} | {{sub_theme}}</h5>
+        <h4 id="themes" class="text-white">{{super_theme}} | {{sub_theme}}</h4>
       </div>
       <div
         id="lyrics-div"
         class="d-flex flex-column min-vh-100 justify-content-center align-items-center space-around"
       >
-        <h1 id="verseno" class="text-white text-center"></h1>
+        <h1 id="verseno" class="text-center text-white"></h1>
         <br />
-        <h1 id="lyrics" class="display-4 px-5 text-white text-center"></h1>
+        <h1 id="lyrics" class="px-5 text-center text-white display-5"></h1>
       </div>
       <script type="text/javascript">
         document.getElementById("lyrics-div").style.position = "fixed";
@@ -101,10 +101,10 @@
       <script>
         var lyrics = {{lyrics | tojson}};
       </script>
-      <div class="position-absolute bottom-0 start-0">
+      <div class="bottom-0 position-absolute start-0">
         <img
           id="icon"
-          class="ms-4 mb-3"
+          class="mb-3 ms-4"
           src="{{icon}}"
           height="50"
           width="50"
@@ -112,27 +112,33 @@
           title="Go back"
           onclick="window.location.href = '/himnario';"
         />
-        <button id="go-back" class="ms-4 mb-3 btn btn-outline-light">
+        <button id="go-back" class="mb-3 ms-4 btn btn-outline-light">
           <span class="bi bi-arrow-left"></span>
         </button>
         <button id="go-forward" class="mb-3 btn btn-outline-light">
           <span class="bi bi-arrow-right"></span>
         </button>
+        <button id="play" class="mb-3 btn btn-outline-light">
+          <span class="bi bi-play"></span>
+        </button>
+        <button class="mb-3 btn btn-outline-light" onclick="window.open('https://forms.gle/Jp8eKBc47rT5FUqaA')">
+          <span class="bi bi-envelope-exclamation"></span>
+        </button>
       </div>
-      <div class="position-absolute bottom-0 end-0">
+      <div class="bottom-0 position-absolute end-0">
         <img
           id="end_icon"
           hidden
-          class="me-4 mb-3"
+          class="mb-3 me-4"
           src="/static/images/circle_logo.png"
-          height="50"
-          width="50"
+          height="60"
+          width="60"
         />
       </div>
-      <div class="position-absolute top-0 start-50 translate-middle-x">
-        <h3 id="verseno" class="display-6 text-white text-center"></h3>
+      <div class="top-0 position-absolute start-50 translate-middle-x">
+        <h3 id="verseno" class="text-center text-white display-6"></h3>
       </div>
-      <div class="position-absolute top-0 end-0">
+      <div class="top-0 position-absolute end-0">
         <button id="fullscreen-btn" class="btn btn-outline-light">
           <span class="bi bi-fullscreen"></span>
         </button>

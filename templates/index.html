@@ -1,129 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Pepper's Website</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/static/images/favicon/apple-touch-icon.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/static/images/favicon/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="/static/images/favicon/favicon-16x16.png"
-    />
-    <link rel="manifest" href="/static/images/favicon/site.webmanifest" />
-    <link
-      rel="mask-icon"
-      href="/static/images/favicon/safari-pinned-tab.svg"
-      color="#5bbad5"
-    />
-    <link rel="shortcut icon" href="/static/images/favicon/favicon.ico" />
-    <meta name="msapplication-TileColor" content="#da532c" />
-    <meta
-      name="msapplication-config"
-      content="/static/images/favicon/browserconfig.xml"
-    />
-    <meta name="theme-color" content="#ffffff" />
-
-    <!-- Bootstrap CSS v5.2.1 -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
-      crossorigin="anonymous"
-    />
-  </head>
-
-  <body>
-    <header>
-      <nav class="navbar bg-body-tertiary navbar-expand navbar-dark bg-dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="/">
-            <img
-              src="../static/images/i.png"
-              alt="Logo"
-              width="40"
-              height="40"
-              class="d-inline-block align-text-center"
-            />
-            Pepper's Website
-          </a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-              <a class="nav-link active" href="/">Home</a>
-              <a class="nav-link" href="/himnario">Himnario</a>
-              <a class="nav-link" href="/bible">Biblia</a>
-            </div>
-          </div>
-        </div>
-      </nav>
-    </header>
-    <main>
-      <div
-        class="d-flex flex-column min-vh-100 justify-content-center align-items-center"
-      >
-        <h2>Hi! My name is Jason Martinez!</h2>
-        <h2>I am a Second-Year CS student at Northeastern University!</h2>
-        <h2>Welcome to my project website!</h2>
-        <p>
-          This is a website that I am using to learn WebDev and to host my
-          projects.
-        </p>
-        <p>
-          You can find my GitHub
-          <a href="https://github.com/martinezjas">here</a>.
-        </p>
-        <p>
-          You can find my LinkedIn
-          <a href="https://www.linkedin.com/in/jason-o-martinez/">here</a>.
-        </p>
-        <p>Have a nice day!</p>
+{% extends 'base.html' %} {% block style %}
+<style>
+  .index {
+    background-image: url("https://media4.giphy.com/media/l4KihuqeuJEi9qLSM/giphy.gif?cid=ecf05e47h84n4tlvjgfblhxmvngyosd6w2uka0iex51g9fs3&ep=v1_gifs_search&rid=giphy.gif&ct=g");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.4);
+  }
+</style>
+{% endblock %} {% block content %}
+<main class="flex flex-col items-center justify-center h-screen index">
+  <div class="flex items-center">
+    <div class="overflow-hidden rounded-full h-80 w-80">
+      <img
+        src="{{url_for('static', filename='images/me.jpg')}}"
+        alt="Profile picture"
+      />
+    </div>
+    <div class="ml-4">
+      <h1 class="text-5xl font-bold leading-tight text-white font-montserrat">
+        Hi, I'm Jason Martinez!
+      </h1>
+      <p class="mt-5 text-3xl text-center text-gray-300">
+        Welcome to my website!
+      </p>
+      <div class="flex items-center justify-center mt-5">
+        <a href="https://linkedin.com/in/jason-o-martinez">
+          <span class="mr-5 text-4xl text-center text-gray-300 bi bi-linkedin"></span>
+        </a>
+        <a href="https://github.com/martinezjas">
+          <span class="text-4xl text-center text-gray-300 bi bi-github"></span>
+        </a>
       </div>
-    </main>
-    <footer>
-      <!-- place footer here -->
-    </footer>
-    <!-- Bootstrap JavaScript Libraries -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-      integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
-      crossorigin="anonymous"
-    ></script>
-
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
-      integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      data-goatcounter="https://martinezjas.goatcounter.com/count"
-      async
-      src="//gc.zgo.at/count.js"
-    ></script>
-  </body>
-</html>
+    </div>
+  </div>
+</main>
+{% endblock %}

@@ -1,183 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Himnario Adventista Applet</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/static/images/favicon/apple-touch-icon.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/static/images/favicon/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="/static/images/favicon/favicon-16x16.png"
-    />
-    <link rel="manifest" href="/static/images/favicon/site.webmanifest" />
-    <link
-      rel="mask-icon"
-      href="/static/images/favicon/safari-pinned-tab.svg"
-      color="#5bbad5"
-    />
-    <link rel="shortcut icon" href="/static/images/favicon/favicon.ico" />
-    <meta name="msapplication-TileColor" content="#da532c" />
-    <meta
-      name="msapplication-config"
-      content="/static/images/favicon/browserconfig.xml"
-    />
-    <meta name="theme-color" content="#ffffff" />
+{% extends 'base.html' %} {% block style %}
+<style>
+  main {
+    background-image: url(https://source.unsplash.com/n8rK2ALPHTY);
+    height: 100vh;
+    width: 100vw;
+    background-size: cover;
+    box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.588);
+  }
 
-    <!-- Bootstrap CSS v5.2.1 -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-
-  <body>
-    <header>
-      <nav class="navbar bg-body-tertiary navbar-expand navbar-dark bg-dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="/">
-            <img
-              src="../static/images/i.png"
-              alt="Logo"
-              width="40"
-              height="40"
-              class="d-inline-block align-text-center"
-            />
-            Pepper's Website
-          </a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+</style>
+{% endblock %} {% block content %}
+<main class="font-lora">
+  <div class="flex items-center justify-center h-screen">
+    <div class="flex flex-wrap items-center">
+      <div class="flex flex-col">
+        <h1 class="mb-2 text-5xl text-white">
+          <i class="bi bi-music-note-list"></i>
+          <span>Himnario Adventista Applet</span>
+        </h1>
+        <p class="mt-2 mb-8 text-lg text-white">
+          This application uses
+          <a
+            class="underline hover:text-slate-300"
+            href="https://github.com/jhormanrus/himnario-adventista-api"
+            >Jhorman Russuel's Himnario Adventista API</a
+          >.
+        </p>
+        <form method="post" class="flex flex-row mb-5">
+          {{form.csrf_token}}
+          <div class="mr-8">
+            {{form.number.label(class="block mb-2 mr-5 text-3xl font-bold text-white")}}
+            {{form.number(class="w-full px-4 py-2 mr-5 text-black border border-gray-400 rounded-lg")}}
+          </div>
+          <div class="text-white">
+            {{form.option.label(class="block mb-2 text-3xl font-bold -lg")}}
+            {{form.option(class="inline-block text-xl align-middle")}}
+          </div>
+        </form>
+        <div class="flex flex-row">
+          <a
+            id="button"
+            href="/hdoc"
+            role="button"
+            class="inline-block px-2 py-2 mr-4 text-white bg-gray-500 rounded-lg hover:bg-gray-600 focus:bg-gray-600"
           >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-              <a class="nav-link" href="/">Home</a>
-              <a class="nav-link active" href="/himnario">Himnario</a>
-              <a class="nav-link" href="/bible">Biblia</a>
-            </div>
-          </div>
-        </div>
-      </nav>
-    </header>
-    <link
-      href="/static/css/himnario_search.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <main>
-      <div
-        class="text-white d-flex flex-column min-vh-100 justify-content-center align-items-center space-around"
-      >
-        <div class="container">
-          <div class="row">
-            <h1>
-              <span class="bi bi-music-note-list"></span> Himnario Adventista
-              Applet
-            </h1>
-            <p>
-              This application uses
-              <a
-                class="text-white"
-                href="https://github.com/jhormanrus/himnario-adventista-api"
-                >Jhorman Ruswel's Himnario Adventista API</a
-              >.
-            </p>
-          </div>
-        </div>
-        <div class="container">
-          <form method="post">
-            {{form.csrf_token}}
-            <div class="row">
-              <div class="col">
-                {{form.number.label(class="form-label h4")}}
-                {{form.number(class="form-control")}}
-              </div>
-              <div class="col">
-                {{form.option.label(class="form-label h4")}}
-                {{form.option(class="radio-inline")}}
-              </div>
-            </div>
-          </form>
-          <div class="row">
-            <div class="col-sm">
-              <a
-                id="button"
-                class="btn btn-secondary"
-                href="/hdoc"
-                role="button"
-                >Go to Documentation / Ir a documentación</a
-              >
-              <a
-                id="button"
-                class="btn btn-secondary"
-                href="https://drive.google.com/file/d/1fWFTMzc9hpRYYneHMPsEJobkBKCwViw8/view"
-                target="_new"
-                role="button"
-                >PDF Copy of Hymnary / Copia PDF del Himnario</a
-              >
-              <a
-                id="button"
-                class="btn btn-secondary"
-                href="/static/images/lookup.jpeg"
-                target="_new"
-                role="button"
-              >
-                Lookup Table / Tabla de búsqueda</a
-              >
-            </div>
-          </div>
+            Go to Documentation / Ir a documentación
+          </a>
+          <a
+            id="button"
+            href="{{url_for('static', filename='himnario.pdf')}}"
+            target="_new"
+            role="button"
+            class="inline-block px-2 py-2 mx-4 text-white bg-gray-500 rounded-lg hover:bg-gray-600 focus:bg-gray-600"
+          >
+            PDF Copy of Hymnary / Copia PDF del Himnario
+          </a>
+          <a
+            id="button"
+            href="http://www.iglesiadeolivos.com.ar/himnario_adventista.html"
+            target="_new"
+            role="button"
+            class="inline-block px-2 py-2 mx-4 text-white bg-gray-500 rounded-lg hover:bg-gray-600 focus:bg-gray-600"
+          >
+            Lookup Table / Tabla de búsqueda
+          </a>
+          <a
+          id="button"
+          href="https://forms.gle/Jp8eKBc47rT5FUqaA"
+          target="_new"
+          role="button"
+          class="inline-block px-2 py-2 mx-4 text-white bg-gray-500 rounded-lg hover:bg-gray-600 focus:bg-gray-600"
+        >
+          Feedback / Comentarios
+        </a>
         </div>
       </div>
-    </main>
-    <footer>
-      <!-- place footer here -->
-    </footer>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-      integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
-      crossorigin="anonymous"
-    ></script>
-
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
-      integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
-      crossorigin="anonymous"
-    ></script>
-    <script data-goatcounter="https://martinezjas.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
-  </body>
-</html>
+    </div>
+  </div>
+</main>
+{% endblock %}

@@ -5,7 +5,7 @@ from wtforms.validators import InputRequired, NumberRange
 
 
 class hymn_form(FlaskForm):
-    number = IntegerField('Número del Himno', validators=[
+    number = IntegerField('Número', validators=[
                           InputRequired(), NumberRange(min=1, max=613)])
     option = RadioField("Opción", default="cantado",
                         choices=[('cantado', 'Cantado'), ('instrumental', 'Instrumental')])
