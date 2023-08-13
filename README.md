@@ -1,5 +1,17 @@
-# Project Website
+# My Personal Website
 
-## Himnario Section
+Welcome to my personal website project! This website serves as a sandbox to hone my web development skills and to host a small project.
 
-This section is a project to create a web application to display the lyrics of the hymns of the Himnario Adventista. It uses [Jhorman Ruswel's Himnario Adventista API](https://github.com/jhormanrus/himnario-adventista-api) to get information about each respective hymn.
+## Tech Stack
+
+For this webiste, I've employed a combination of modern web technologies to ensure (maybe) an engaging and responsive user experience:
+
+- **Frontend**: HTML5, CSS3, JavaScript (ES6)
+- **Backend**: Python Flask run on a Gunicorn instance
+- **Styling**: Tailwind CSS and Bootstrap CSS
+- **Version Control**: Git for efficient code management and collaboration
+- **Hosting**: The website is hosted on a virtual private server located somewhere in the US
+
+Feel free to explore the website, and I'd love to hear your feedback! This project reflects my journey in the world of web development and design, and I hope it provides value to fellow developers, designers, and curious minds.
+
+[Visit the website](https://www.folfmart.xyz)!
