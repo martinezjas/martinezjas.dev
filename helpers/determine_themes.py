@@ -176,7 +176,7 @@ def determine_themes(hymn_number):
             hymn_subtheme = 'https://source.unsplash.com/DqgMHzeio7g'
             sub_theme = "Niños"
         elif 608 <= hymn_number <= 613:
-            hymn_subtheme = 'https://www.adventist.org/wp-content/uploads/2019/12/youth-scaled.jpg'
+            hymn_subtheme = 'https://source.unsplash.com/PGnqT0rXWLs'
             sub_theme = "Jóvenes"
 
     if validators.url(hymn_supertheme, hymn_subtheme):
