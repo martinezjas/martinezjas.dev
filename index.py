@@ -21,6 +21,9 @@ def homepage():
 
 @app.route("/himnario", methods=["POST", "GET"])
 def himnario():
+    return render_template("construction.html")
+'''
+def himnario():
     form = hymn_form()
     if form.validate_on_submit():
         hymn_number = form.number.data
@@ -62,7 +65,7 @@ def himnario():
             )
     else:
         return render_template("himnario_search.html", form=form)
-
+'''
 
 @app.route("/hdoc")
 def hdoc():
