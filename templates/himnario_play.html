@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title>{{title}}</title>
@@ -72,17 +72,30 @@
       body {
         background-image: url("{{bg_url}}");
       }
+      @media (max-width: 768px) {
+        #lyrics {
+          font-size: calc(2.6rem + 0.5vw);
+        }
+      }
+
+      @media (min-width: 768px) {
+        #lyrics {
+          font-size: calc(2.6rem + 1vw);
+        }
+      }
     </style>
     <main>
       <div
         id="title-div"
         class="d-flex flex-column min-vh-100 justify-content-center align-items-center"
       >
-        <h1 id="title" class="text-white display-4">
+        <h1 id="title" class="text-white display-3">
           {{number}} | <em>{{title}}</em>
         </h1>
         <br />
-        <h4 id="themes" class="text-white">{{super_theme}} | {{sub_theme}}</h4>
+        <h3 id="themes" class="text-white fst-italic">
+          {{super_theme}} | {{sub_theme}}
+        </h3>
       </div>
       <div
         id="lyrics-div"
@@ -90,7 +103,7 @@
       >
         <h1 id="verseno" class="text-center text-white"></h1>
         <br />
-        <h1 id="lyrics" class="px-5 text-center text-white" style="max-height: 500px; font-size: calc(2.5rem + 1vw);"></h1>
+        <h1 id="lyrics" class="px-5 text-center text-white"></h1>
       </div>
       <script type="text/javascript">
         document.getElementById("lyrics-div").style.position = "fixed";
@@ -121,7 +134,10 @@
         <button id="play" class="mb-3 btn btn-outline-light">
           <span class="bi bi-play"></span>
         </button>
-        <button class="mb-3 btn btn-outline-light" onclick="window.open('https://forms.gle/Jp8eKBc47rT5FUqaA')">
+        <button
+          class="mb-3 btn btn-outline-light"
+          onclick="window.open('https://forms.gle/Jp8eKBc47rT5FUqaA')"
+        >
           <span class="bi bi-envelope-exclamation"></span>
         </button>
       </div>
@@ -160,7 +176,5 @@
       integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
       crossorigin="anonymous"
     ></script>
-    <script data-goatcounter="https://martinezjas.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
   </body>
 </html>

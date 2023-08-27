@@ -68,7 +68,7 @@ def determine_themes(hymn_number):
     elif 190 <= hymn_number <= 203:
         hymn_supertheme = 'https://cdn-icons-png.flaticon.com/512/9844/9844643.png'
         super_theme = sub_theme = "El Espíritu Santo"
-        hymn_subtheme = 'https://images.pexels.com/photos/75973/pexels-photo-75973.jpeg'
+        hymn_subtheme = 'https://source.unsplash.com/yZu0dWSplXM'
     elif 204 <= hymn_number <= 208:
         hymn_supertheme = 'https://cdn-icons-png.flaticon.com/512/3389/3389381.png'
         hymn_subtheme = 'https://source.unsplash.com/TNlHf4m4gpI'

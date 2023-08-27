@@ -1,198 +1,275 @@
-function isScreenLockSupported() {
-  return "wakeLock" in navigator;
+// Initialize screenLock variable to null
+let screenLock = null;
+
+// Define release function to release screen lock
+function release() {
+  if (screenLock !== null) {
+    screenLock.release().then(() => {
+      if (typeof console !== "undefined") {
+        console.log("Screen lock released");
+      }
+    });
+    screenLock = null;
+  }
 }
+
+// Define getScreenLock function to request screen lock
 async function getScreenLock() {
-  if (isScreenLockSupported()) {
-    let screenLock;
+  if ("wakeLock" in navigator) {
     try {
       screenLock = await navigator.wakeLock.request("screen");
+      if (typeof console !== "undefined") {
+        console.log("Screen lock acquired");
+      }
     } catch (err) {
-      console.log(err.name, err.message);
+      if (typeof console !== "undefined") {
+        console.error(`${err.name}, ${err.message}`);
+      }
     }
-    return screenLock;
+  } else {
+    if (typeof console !== "undefined") {
+      console.error("Wake Lock API not supported");
+    }
   }
 }
-function release() {
-  if (typeof screenLock !== "undefined" && screenLock != null) {
-    screenLock.release().then(() => {
-      console.log("Lock released 🎈");
-      screenLock = null;
-    });
-  }
-}
+
+// Call getScreenLock function to request screen lock
 getScreenLock();
+
+// Add event listener to listen for changes in visibility state of document
 document.addEventListener("visibilitychange", async () => {
+  // If screen lock is not null and document is visible, request screen lock
   if (screenLock !== null && document.visibilityState === "visible") {
-    screenLock = await navigator.wakeLock.request("screen");
+    getScreenLock();
   }
 });
-document.getElementById("audio").addEventListener("ended", function () {
+
+// Add event listener to listen for end of audio playback
+document.getElementById("audio").addEventListener("ended", async () => {
+  // Release screen lock and redirect to himnario page
   release();
   window.location.href = "/himnario";
 });
-var audio = document.getElementById("audio");
-const res = JSON.parse(lyrics);
-const end_card_time = Math.floor(audio.duration) - 4;
-var i = 0;
+
+const audio = document.getElementById("audio");
+const res = lyrics;
+
+let i = 0;
+
 const firstTime = res[0].timestamp - 1;
-var hasBreak = false;
+let hasBreak = false;
+
+// Add a timeupdate event listener to the audio element
 audio.addEventListener(
   "timeupdate",
-  function () {
-    var currentTime = Math.floor(audio.currentTime);
-    if (currentTime == firstTime) {
+  async () => {
+    // Get the current time of the audio in seconds
+    const currentTime = Math.floor(audio.currentTime);
+
+    // If the current time matches the timestamp of the first verse, hide the title and themes and show the lyrics
+    if (currentTime === firstTime) {
       document.getElementById("title").hidden = true;
       document.getElementById("themes").hidden = true;
       document.getElementById("title-div").style.position = "fixed";
       document.getElementById("lyrics-div").style.position = "relative";
       document.getElementById("lyrics").hidden = false;
     }
-    var curInterval = setInterval(function () {
+
+    // Set an interval to update the lyrics every 500 milliseconds
+    const curInterval = setInterval(async () => {
+      // If there are more verses to display and there is no break, check if the current time matches the timestamp of the next verse
       if (i < res.length && !hasBreak) {
-        if (currentTime == res[i].timestamp - 1) {
-          document.getElementById("lyrics").innerHTML = res[
-            i
-          ].verse.content.replace(/(\.\s+|;\s+|!\s+|\?\s+)/g, "$1<br>");
-          verse_number = res[i].verse.number;
-          if (verse_number == 0) {
-            verse_number = "Coro";
+        if (currentTime === res[i].timestamp - 1) {
+          // Update the lyrics and verse number
+          document.getElementById("lyrics").innerHTML = res[i].contents.replace(
+            /(\.\s+|;\s+|!\s+|\?\s+)/g,
+            "$1<br>",
+          );
+          let verseNumber = res[i].verseNumber;
+          if (verseNumber === 0) {
+            verseNumber = "Coro";
           }
-          document.getElementById("verseno").innerHTML = verse_number;
-          i = i + 1;
-          if (i == res.length) {
+          document.getElementById("verseno").innerHTML = verseNumber;
+
+          // Move to the next verse
+          i += 1;
+
+          // If this is the last verse, show the end icon
+          if (i === res.length) {
             document.getElementById("end_icon").hidden = false;
           }
         }
       } else {
+        // If there are no more verses or there is a break, clear the interval
         clearInterval(curInterval);
       }
     }, 500);
   },
   false,
 );
-var myDocument = document.documentElement;
-var myButton = document.getElementById("fullscreen-btn");
 
+// Get a reference to the document
+const myDocument = document.documentElement;
+// Get a reference to the fullscreen button
+const fullScreenButton = document.getElementById("fullscreen-btn");
+
+// Function to toggle fullscreen mode
 function toggleFullscreen() {
-  if (
-    (document.fullScreenElement && document.fullScreenElement !== null) ||
-    (!document.mozFullScreen && !document.webkitIsFullScreen)
-  ) {
-    if (document.documentElement.requestFullScreen) {
-      document.documentElement.requestFullScreen();
-    } else if (document.documentElement.mozRequestFullScreen) {
-      document.documentElement.mozRequestFullScreen();
-    } else if (document.documentElement.webkitRequestFullScreen) {
-      document.documentElement.webkitRequestFullScreen(
-        Element.ALLOW_KEYBOARD_INPUT,
-      );
+  const docEl = document.documentElement;
+  const isFullscreen =
+    document.fullscreenElement ||
+    document.webkitFullscreenElement ||
+    document.mozFullScreenElement ||
+    document.msFullscreenElement;
+
+  // If not in fullscreen mode, request fullscreen
+  if (!isFullscreen) {
+    if (docEl.requestFullscreen) {
+      docEl.requestFullscreen();
+    } else if (docEl.webkitRequestFullscreen) {
+      docEl.webkitRequestFullscreen();
+    } else if (docEl.mozRequestFullScreen) {
+      docEl.mozRequestFullScreen();
+    } else if (docEl.msRequestFullscreen) {
+      docEl.msRequestFullscreen();
     }
   } else {
-    if (document.cancelFullScreen) {
-      document.cancelFullScreen();
+    // If in fullscreen mode, exit fullscreen
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
     } else if (document.mozCancelFullScreen) {
       document.mozCancelFullScreen();
-    } else if (document.webkitCancelFullScreen) {
-      document.webkitCancelFullScreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
     }
   }
 }
 
-myButton.addEventListener("click", toggleFullscreen);
-myDocument.addEventListener("keydown", function (e) {
-  if (e.key == "f" || e.key == "F") {
+// Add a click event listener to the fullscreen button
+fullScreenButton.addEventListener("click", toggleFullscreen);
+
+// Add a keydown event listener to the document
+myDocument.addEventListener("keydown", async (e) => {
+  // If the "f" or "F" key is pressed, toggle fullscreen
+  if (e.key === "f" || e.key === "F") {
     toggleFullscreen();
   }
-  if (e.key == "s" || e.key == "S") {
+  // If the "s" or "S" key is pressed, release the audio and redirect to the hymnario page
+  if (e.key === "s" || e.key === "S") {
     release();
     window.location.href = "/himnario";
   }
 });
 
-var leftButton = document.getElementById("go-back");
-var rightButton = document.getElementById("go-forward");
-var playButton = document.getElementById("play");
-var firstClick = false;
+// Get references to the left, right, and play buttons
+const leftButton = document.getElementById("go-back");
+const rightButton = document.getElementById("go-forward");
+const playButton = document.getElementById("play");
 
+// Initialize a flag to track whether the play button has been clicked before
+let firstClick = false;
+
+// Define a function to handle the play button click event
 function play() {
+  // If this is the first click, play the audio and set the firstClick flag to true
   if (!firstClick) {
     audio.play();
     firstClick = true;
   } else {
+    // If this is not the first click, pause the audio and set the firstClick flag to false
     audio.pause();
     firstClick = false;
   }
 }
 
 function goBack() {
+  // Set the hasBreak flag to true to indicate that there is a break in the lyrics
   hasBreak = true;
+
+  // Hide the title and themes and show the lyrics
   document.getElementById("title").hidden = true;
   document.getElementById("themes").hidden = true;
   document.getElementById("title-div").style.position = "fixed";
   document.getElementById("lyrics-div").style.position = "relative";
   document.getElementById("lyrics").hidden = false;
+
+  // Move to the previous verse
   if (i > 0) {
-    i = i - 1;
+    i -= 1;
   }
-  document.getElementById("lyrics").innerHTML = res[i].verse.content.replace(
+
+  // Update the lyrics and verse number
+  document.getElementById("lyrics").innerHTML = res[i].contents.replace(
     /(\.\s+|;\s+|!\s+|\?\s+)/g,
     "$1<br>",
   );
-  verse_number = res[i].verse.number;
-  if (verse_number == 0) {
-    verse_number = "Coro";
+  let verseNumber = res[i].verseNumber;
+  if (verseNumber === 0) {
+    verseNumber = "Coro";
   }
-  document.getElementById("verseno").innerHTML = verse_number;
-  if (i + 1 == res.length) {
+  document.getElementById("verseno").innerHTML = verseNumber;
+
+  // Show or hide the end icon depending on whether this is the last verse
+  if (i + 1 === res.length) {
     document.getElementById("end_icon").hidden = false;
-  }
-  if (i + 1 != res.length) {
+  } else {
     document.getElementById("end_icon").hidden = true;
   }
 }
 
 function goForward() {
+  // Set the hasBreak flag to true to indicate that there is a break in the lyrics
   hasBreak = true;
+
+  // Hide the title and themes and show the lyrics
   document.getElementById("title").hidden = true;
   document.getElementById("themes").hidden = true;
   document.getElementById("title-div").style.position = "fixed";
   document.getElementById("lyrics-div").style.position = "relative";
   document.getElementById("lyrics").hidden = false;
+
+  // Move to the next verse
   if (i < res.length && firstClick) {
-    i = i + 1;
+    i += 1;
   } else if (i < res.length && !firstClick) {
     i = 0;
     firstClick = true;
   }
-  document.getElementById("lyrics").innerHTML = res[i].verse.content.replace(
+
+  // Update the lyrics and verse number
+  document.getElementById("lyrics").innerHTML = res[i].contents.replace(
     /(\.\s+|;\s+|!\s+|\?\s+)/g,
     "$1<br>",
   );
-  verse_number = res[i].verse.number;
-  if (verse_number == 0) {
-    verse_number = "Coro";
+  let verseNumber = res[i].verseNumber;
+  if (verseNumber === 0) {
+    verseNumber = "Coro";
   }
-  document.getElementById("verseno").innerHTML = verse_number;
-  if (i + 1 == res.length) {
+  document.getElementById("verseno").innerHTML = verseNumber;
+
+  // Show or hide the end icon depending on whether this is the last verse
+  if (i + 1 === res.length) {
     document.getElementById("end_icon").hidden = false;
-  }
-  if (i + 1 != res.length) {
+  } else {
     document.getElementById("end_icon").hidden = true;
   }
 }
 
+// Add click event listeners to the play, left, and right buttons
 playButton.addEventListener("click", play);
-
 leftButton.addEventListener("click", goBack);
-myDocument.addEventListener("keydown", function (e) {
-  if (e.key == "ArrowLeft") {
+rightButton.addEventListener("click", goForward);
+
+// Add keydown event listener to the document
+myDocument.addEventListener("keydown", async (e) => {
+  // If the left arrow key is pressed, go back
+  if (e.key === "ArrowLeft") {
     goBack();
   }
-});
-
-rightButton.addEventListener("click", goForward);
-myDocument.addEventListener("keydown", function (e) {
-  if (e.key == "ArrowRight") {
+  // If the right arrow key is pressed, go forward
+  if (e.key === "ArrowRight") {
     goForward();
   }
 });
