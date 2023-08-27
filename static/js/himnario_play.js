@@ -161,6 +161,11 @@ myDocument.addEventListener("keydown", async (e) => {
     release();
     window.location.href = "/himnario";
   }
+
+  // If the "p", "P", or spacebar key is pressed, play or pause the audio
+  if (e.key === "p" || e.key === "P" || e.key === " ") {
+    play();
+  }
 });
 
 // Get references to the left, right, and play buttons
