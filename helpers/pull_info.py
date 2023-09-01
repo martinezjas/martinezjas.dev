@@ -13,42 +13,28 @@ def get_audio_url(hymn_option, hymn_number):
     return urls[hymn_option]
 
 
-def get_lyrics(json_data, verse_data):
+def get_lyrics_data(json_data):
     """
-    Given the JSON data and verse data, returns a list of lyrics with their corresponding metadata.
+    Given the JSON data, returns a list of verse data with their corresponding metadata.
     """
     lyrics = []
     for entry in json_data["sequence"]:
         data = {
-            "contents": None,
-            "ID": entry["id"],
             "verseNumber": None,
-            "timestamp": entry["timestamp"],
+            "verseID": entry["verseId"],
+            "lineID": entry["verseContentId"],
+            "line": None,
+            "timeStamp": entry["timestamp"],
         }
-        if data["timestamp"] is not None:
-            for verse in verse_data:
-                if verse["ID"] == entry["verseId"]:
-                    data["contents"] = verse["contents"]
-                    data["verseNumber"] = verse["verseNumber"]
-                    lyrics.append(data)
+        for verse in json_data["verses"]:
+            for line in verse["contents"]:
+                if line["id"] == data["lineID"]:
+                    data["verseNumber"] = verse["number"]
+                    data["line"] = line["content"]
+                    if all(value is not None for value in data.values()):
+                        lyrics.append(data)
                     break
     return lyrics
-
-
-def get_verse_data(json_data):
-    """
-    Given the JSON data, returns a list of verse data with their corresponding metadata.
-    """
-    verse_data = []
-    for verse in json_data["verses"]:
-        verse_contents = " ".join([content["content"] for content in verse["contents"]])
-        data = {
-            "contents": verse_contents,
-            "ID": verse["id"],
-            "verseNumber": verse["number"],
-        }
-        verse_data.append(data)
-    return verse_data
 
 
 def pull_data(hymn_option, json_data, hymn_number):
@@ -58,6 +44,5 @@ def pull_data(hymn_option, json_data, hymn_number):
     audio_url = get_audio_url(hymn_option, hymn_number)
     title, number = json_data["title"], json_data["number"]
     icon, bg_url, super_theme, sub_themes = determine_themes(hymn_number)
-    verse_data = get_verse_data(json_data)
-    lyrics = get_lyrics(json_data, verse_data)
+    lyrics = get_lyrics_data(json_data)
     return audio_url, title, number, lyrics, bg_url, icon, super_theme, sub_themes

@@ -56,7 +56,7 @@ const res = lyrics;
 
 let i = 0;
 
-const firstTime = res[0].timestamp - 1;
+const firstTime = res[0].timeStamp - 1;
 let hasBreak = false;
 
 // Add a timeupdate event listener to the audio element
@@ -79,9 +79,9 @@ audio.addEventListener(
     const curInterval = setInterval(async () => {
       // If there are more verses to display and there is no break, check if the current time matches the timestamp of the next verse
       if (i < res.length && !hasBreak) {
-        if (currentTime === res[i].timestamp - 1) {
+        if (currentTime === res[i].timeStamp - 1) {
           // Update the lyrics and verse number
-          document.getElementById("lyrics").innerHTML = res[i].contents.replace(
+          document.getElementById("lyrics").innerHTML = res[i].line.replace(
             /(\.\s+|;\s+|!\s+|\?\s+)/g,
             "$1<br>",
           );
@@ -206,7 +206,7 @@ function goBack() {
   }
 
   // Update the lyrics and verse number
-  document.getElementById("lyrics").innerHTML = res[i].contents.replace(
+  document.getElementById("lyrics").innerHTML = res[i].line.replace(
     /(\.\s+|;\s+|!\s+|\?\s+)/g,
     "$1<br>",
   );
@@ -244,7 +244,7 @@ function goForward() {
   }
 
   // Update the lyrics and verse number
-  document.getElementById("lyrics").innerHTML = res[i].contents.replace(
+  document.getElementById("lyrics").innerHTML = res[i].line.replace(
     /(\.\s+|;\s+|!\s+|\?\s+)/g,
     "$1<br>",
   );
