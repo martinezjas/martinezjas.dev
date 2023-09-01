@@ -74,14 +74,19 @@
       }
       @media (max-width: 768px) {
         #lyrics {
-          font-size: calc(2.6rem + 0.5vw);
+          font-size: calc(3rem + 0.5vw);
         }
       }
 
       @media (min-width: 768px) {
         #lyrics {
-          font-size: calc(2.6rem + 1vw);
+          font-size: calc(3rem + 1vw);
         }
+      }
+
+      #lyrics-div {
+        padding-left: 80px;
+        padding-right: 80px;
       }
     </style>
     <main>
@@ -99,11 +104,11 @@
       </div>
       <div
         id="lyrics-div"
-        class="d-flex flex-column min-vh-100 justify-content-center align-items-center space-around"
+        class="d-flex flex-column min-vh-100 justify-content-center align-items-center"
       >
         <h1 id="verseno" class="text-center text-white"></h1>
         <br />
-        <h1 id="lyrics" class="px-5 text-center text-white display-1"></h1>
+        <h1 id="lyrics" class="text-center text-white"></h1>
       </div>
       <script type="text/javascript">
         document.getElementById("lyrics-div").style.position = "fixed";
