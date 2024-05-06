@@ -179,7 +179,7 @@ def determine_themes(hymn_number):
             hymn_subtheme = 'https://source.unsplash.com/PGnqT0rXWLs'
             sub_theme = "Jóvenes"
 
-    if validators.url(hymn_supertheme, hymn_subtheme):
+    if validators.url(hymn_supertheme) and validators.url(hymn_subtheme):
         return hymn_supertheme, hymn_subtheme, super_theme, sub_theme
     else:
-        return 'https://cdn-icons-png.flaticon.com/512/1769/1769039.png', 'https://i.pinimg.com/originals/6d/6f/0e/6d6f0e4099b30c8993d460e5e565144d.jpg', "my", "hoa"
+        return 'https://cdn-icons-png.flaticon.com/512/1769/1769039.png', 'https://i.pinimg.com/originals/6d/6f/0e/6d6f0e4099b30c8993d460e5e565144d.jpg', super_theme, sub_theme
