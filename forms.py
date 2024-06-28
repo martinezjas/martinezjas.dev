@@ -10,3 +10,7 @@ class hymn_form(FlaskForm):
     option = RadioField("Opción", default="cantado",
                         choices=[('cantado', 'Cantado'), ('instrumental', 'Instrumental'), ('letra', 'Letra')])
     submit = SubmitField('Buscar')
+    
+class hymn_search(FlaskForm):
+    search = StringField('Buscar', validators=[InputRequired()])
+    submit = SubmitField('Buscar')

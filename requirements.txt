@@ -3,3 +3,5 @@ Flask_WTF
 requests
 validators
 WTForms
+sqlite3
+pandas

@@ -1,8 +1,9 @@
 from flask import Flask, render_template, url_for
-from forms import hymn_form
+from forms import hymn_form, hymn_search
 from requests.exceptions import HTTPError
 from helpers.pull_info import pull_data
 import requests
+from helpers.search_engine import search as findr
 import json
 
 app = Flask(__name__)
@@ -67,6 +68,21 @@ def himnario():
 @app.route("/hdoc")
 def hdoc():
     return render_template("himnario_doc.html")
+
+@app.route("/search", methods=["POST", "GET"])
+def search():
+    form = hymn_search()
+    if form.validate_on_submit():
+        query = form.search.data
+        try:
+            results = findr(query)
+            return render_template("search_results.html", results=results)
+        except Exception as err:
+            return render_template(
+                "error_handle.html", message="An error occurred: " + str(err)
+            )
+    else:
+        return render_template("search.html", form=form)
 
 if __name__ == "__main__":
     app.run()
