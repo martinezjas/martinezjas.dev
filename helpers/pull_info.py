@@ -9,6 +9,7 @@ def get_audio_url(hymn_option, hymn_number):
     urls = {
         "instrumental": f"https://archive.org/download/HimnarioPistas/{str(hymn_number).zfill(3)}.mp3",
         "cantado": f"https://archive.org/download/HimnarioAdventista/{str(hymn_number).zfill(3)}.mp3",
+        "letra": "",
     }
     return urls[hymn_option]
 
