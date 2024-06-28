@@ -1,5 +1,4 @@
 import sqlite3 as sql
-import pandas as pd
 
 def search(query):
     con = sql.connect('static/himnario.db')
