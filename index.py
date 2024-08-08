@@ -1,10 +1,9 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, redirect, session
 from forms import hymn_form, hymn_search
 from requests.exceptions import HTTPError
 from helpers.pull_info import pull_data
 import requests
 from helpers.search_engine import search as findr
-import json
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "d3f1fdf354bc63bc3c348ddf4abd39fe"
@@ -42,17 +41,17 @@ def himnario():
                 super_theme,
                 sub_theme,
             ) = pull_data(hymn_option, json_data, hymn_number)
-            return render_template(
-                "himnario_play.html",
-                audio_url=audio_url,
-                title=title,
-                number=number,
-                lyrics=lyrics,
-                bg_url=bg_url,
-                icon=icon,
-                super_theme=super_theme,
-                sub_theme=sub_theme,
-            )
+            session["hymn_data"] = {
+                "audio_url": audio_url,
+                "title": title,
+                "number": number,
+                "lyrics": lyrics,
+                "bg_url": bg_url,
+                "icon": icon,
+                "super_theme": super_theme,
+                "sub_theme": sub_theme,
+            }
+            return redirect(url_for("himnario_play", hymn_number=hymn_number))
         except HTTPError as http_err:
             return render_template(
                 "error_handle.html", message="An HTTP error occurred: " + str(http_err)
@@ -65,9 +64,31 @@ def himnario():
         return render_template("himnario_search.html", form=form)
 
 
+@app.route("/himnario/<int:hymn_number>")
+def himnario_play(hymn_number):
+    hymn_data = session.get("hymn_data")
+    if hymn_data:
+        copy = hymn_data.copy()
+        session.pop("hymn_data")
+        return render_template(
+            "himnario_play.html",
+            audio_url=copy["audio_url"],
+            title=copy["title"],
+            number=copy["number"],
+            lyrics=copy["lyrics"],
+            bg_url=copy["bg_url"],
+            icon=copy["icon"],
+            super_theme=copy["super_theme"],
+            sub_theme=copy["sub_theme"],
+        )
+    else:
+        return redirect(url_for("himnario"))
+
+
 @app.route("/hdoc")
 def hdoc():
     return render_template("himnario_doc.html")
+
 
 @app.route("/search", methods=["POST", "GET"])
 def search():
@@ -83,6 +104,7 @@ def search():
             )
     else:
         return render_template("search.html", form=form)
+
 
 if __name__ == "__main__":
     app.run()
