@@ -1,0 +1,41 @@
+{% extends 'base.html' %} {% block style %}
+<style>
+  main {
+    background-image: url("/static/images/background.jpg");
+    height: 100vh;
+    width: 100vw;
+    background-size: cover;
+    box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.588);
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+</style>
+{% endblock %}{% block content %}
+<main>
+  <div class="container p-4 mx-auto text-center text-white">
+    <img src="static/images/E3024BI.png" class="w-48 h-auto mx-auto"></img>
+    <h1>We're sorry...</h1>
+    <h2>
+      Due to an outage of the Internet Archive and the Himnario API, this page
+      is currently out of order.
+    </h2>
+    <h3>Click the button below or use the nav-bar to return home.</h3>
+
+    <hr class="my-4 border-white"></hr>
+
+    <h1>Lo sentimos...</h1>
+    <h2>
+      Debido a una interrupción del Internet Archive y la API de Himnario, esta
+      página está fuera de servicio.
+    </h2>
+    <h3>
+      Haga clic en el botón de abajo o use la barra de navegación para regresar
+      a la página principal.
+    </h3>
+    <a href="/" class="btn btn-primary">Go Home</a>
+  </div>
+</main>
+{% endblock %}
