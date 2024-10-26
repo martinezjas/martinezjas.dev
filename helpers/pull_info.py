@@ -13,6 +13,17 @@ def get_audio_url(hymn_option, hymn_number):
     }
     return urls[hymn_option]
 
+def backup_audio_url(json_data, hymn_option):
+    """
+    Given the JSON data and hymn number, returns the corresponding audio URL.
+    """
+    urls = {
+        "instrumental": json_data["mp3UrlInstr"],
+        "cantado": json_data["mp3Url"],
+        "letra": "",
+    }
+    return urls[hymn_option]
+
 
 def get_lyrics_data(json_data):
     """
