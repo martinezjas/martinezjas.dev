@@ -24,5 +24,5 @@ def get_photo_data(photo_id):
         )
     except Exception as err:
         return render_template(
-            "error_handl.html", message="An non-HTTP error occurred: " + str(err)
+            "error_handle.html", message="An non-HTTP error occurred: " + str(err)
         )

@@ -4,6 +4,7 @@ from requests.exceptions import HTTPError
 from helpers.pull_info import pull_data
 import requests
 from helpers.search_engine import search as findr
+from helpers.get_data import get_data
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "d3f1fdf354bc63bc3c348ddf4abd39fe"
@@ -26,11 +27,12 @@ def himnario():
         hymn_number = form.number.data
         hymn_option = form.option.data
         try:
-            response = requests.get(
-                "https://sdah.my.to/hymn/" + str(hymn_number), timeout=15
-            )
-            response.raise_for_status()
-            json_data = response.json()
+            local_data = get_data(str(hymn_number))
+            if not local_data:
+                return render_template(
+                    "error_handle.html",
+                    message="The hymn number you entered does not exist.",
+                )
             (
                 audio_url,
                 title,
@@ -40,7 +42,7 @@ def himnario():
                 icon,
                 super_theme,
                 sub_theme,
-            ) = pull_data(hymn_option, json_data, hymn_number)
+            ) = pull_data(hymn_option, local_data, hymn_number)
             session["hymn_data"] = {
                 "audio_url": audio_url,
                 "title": title,
