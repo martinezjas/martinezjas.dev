@@ -61,7 +61,7 @@ def determine_themes(hymn_number):
             sub_theme = "Amor de Cristo"
             hymn_subtheme = 'https://images.pexels.com/photos/217893/pexels-photo-217893.jpeg'
         elif 127 <= hymn_number <= 157:
-            hymn_subtheme = get_photo_info.get_photo_data('xec7sr04U5c')
+            hymn_subtheme = get_photo_info.get_photo_data('iuNiHYUHXjA')
             sub_theme = "Alabanza a Cristo"
         elif 158 <= hymn_number <= 189:
             sub_theme = "Segunda Venida de Cristo"
