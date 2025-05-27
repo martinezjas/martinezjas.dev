@@ -1,39 +1,73 @@
-{% extends 'base.html' %} {% block style %}
+{% extends 'base.html' %}
+{% block style %}
 <style>
-  .index {
-    background-image: url("https://media4.giphy.com/media/l4KihuqeuJEi9qLSM/giphy.gif?cid=ecf05e47h84n4tlvjgfblhxmvngyosd6w2uka0iex51g9fs3&ep=v1_gifs_search&rid=giphy.gif&ct=g");
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header, footer {
+    flex-shrink: 0;
+  }
+  main.index {
+    flex: 1 0 auto;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
     box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .hero-row {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100vw;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none;
+  }
+  .hero-name, .hero-icons {
+    pointer-events: auto;
+  }
+  .hero-name span {
+    font-size: 2.5rem; /* Medium size */
+  }
+  .hero-icons a {
+    font-size: 2.5rem; /* Medium size */
   }
 </style>
-{% endblock %} {% block content %}
-<main class="flex flex-col items-center justify-center h-screen index">
-  <div class="flex items-center">
-    <div class="overflow-hidden rounded-full h-80 w-80">
-      <img
-        src="{{url_for('static', filename='images/me.jpeg')}}"
-        alt="Profile picture"
-      />
+{% endblock %}
+{% block content %}
+<canvas id="matrix-rain" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;"></canvas>
+<main class="w-full index">
+  <div class="hero-row">
+    <div
+      class="px-8 py-4 bg-gray-800 rounded shadow-lg hero-name bg-opacity-70"
+      style="font-family: 'Fira Mono', 'Consolas', 'Menlo', 'Monaco', 'Liberation Mono', monospace;"
+    >
+      <span class="font-mono text-white">Jason Martinez</span>
     </div>
-    <div class="ml-4">
-      <h1 class="text-5xl font-bold leading-tight text-white font-montserrat">
-        Hi, I'm Jason Martinez!
-      </h1>
-      <p class="mt-5 text-3xl text-center text-gray-300">
-        Welcome to my website!
-      </p>
-      <div class="flex items-center justify-center mt-5">
-        <a href="https://linkedin.com/in/jason-o-martinez">
-          <span class="mr-5 text-4xl text-center text-gray-300 bi bi-linkedin"></span>
-        </a>
-        <a href="https://github.com/martinezjas">
-          <span class="text-4xl text-center text-gray-300 bi bi-github"></span>
-        </a>
-      </div>
+    <div class="px-8 py-4 hero-icons">
+      <a href="https://github.com/martinezjas" target="_blank" rel="noopener" class="mx-2 text-white" aria-label="GitHub">
+        <i class="bi bi-github"></i>
+      </a>
+      <a href="https://www.linkedin.com/in/jason-o-martinez/" target="_blank" rel="noopener" class="mx-2 text-white" aria-label="LinkedIn">
+        <i class="bi bi-linkedin"></i>
+      </a>
     </div>
   </div>
+  <!-- Your content here -->
 </main>
+<script src="{{ url_for('static', filename='js/matrixrain.js') }}"></script>
 {% endblock %}
