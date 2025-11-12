@@ -6,11 +6,15 @@ def search(query):
     out = None
     if query.isdigit():
         query = int(query)
-        res = cur.execute(f"SELECT number, title FROM hymn WHERE number = {query}")
+        res = cur.execute("SELECT number, title FROM hymn WHERE number = ?", (query,))
         out = res.fetchone()
-        out = [f"Himno {out[0]}: {out[1]}"]
+        if out:
+            out = [f"Himno {out[0]}: {out[1]}"]
+        else:
+            out = []
     else:
-        res = cur.execute(f"SELECT number, title FROM hymn WHERE title LIKE '%{query}%'")
+        res = cur.execute("SELECT number, title FROM hymn WHERE title LIKE ?", (f"%{query}%",))
         out = res.fetchall()
         out = [f"Himno {i[0]}: {i[1]}" for i in out]
+    con.close()
     return out

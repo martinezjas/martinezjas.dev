@@ -9,19 +9,22 @@ def get_data(query):
 
     if query.isdigit():
         query = int(query)
-        res = cur.execute(f"SELECT id, number, title FROM hymn WHERE id = {query}")
+        res = cur.execute("SELECT id, number, title FROM hymn WHERE id = ?", (query,))
         out = res.fetchone()
         if not out:
+            con.close()
             return None
 
         verses_data = cur.execute(
-            f"SELECT id, number from verse where hymnId = {out['id']} ORDER BY number ASC"
+            "SELECT id, number from verse where hymnId = ? ORDER BY number ASC",
+            (out['id'],)
         ).fetchall()
 
         verses_list = []
         for v in verses_data:
             contents = cur.execute(
-                f"SELECT id, content FROM verseContent WHERE verseId = {v['id']} ORDER BY ordering ASC"
+                "SELECT id, content FROM verseContent WHERE verseId = ? ORDER BY ordering ASC",
+                (v['id'],)
             ).fetchall()
             verses_list.append(
                 {
@@ -34,10 +37,11 @@ def get_data(query):
             )
 
         sequence_data = cur.execute(
-            f"SELECT vs.id, vs.timestamp, vs.verseContentId, vc.verseId FROM verseSequence vs INNER JOIN verseContent vc ON vc.id = vs.verseContentId INNER JOIN verse vv ON vv.id = vc.verseId WHERE vv.hymnId = {out['id']} ORDER BY vs.position ASC"
+            "SELECT vs.id, vs.timestamp, vs.verseContentId, vc.verseId FROM verseSequence vs INNER JOIN verseContent vc ON vc.id = vs.verseContentId INNER JOIN verse vv ON vv.id = vc.verseId WHERE vv.hymnId = ? ORDER BY vs.position ASC",
+            (out['id'],)
         ).fetchall()
 
-        return {
+        result = {
             "id": out["id"],
             "number": out["number"],
             "title": out["title"],
@@ -52,4 +56,7 @@ def get_data(query):
                 for s in sequence_data
             ],
         }
+        con.close()
+        return result
+    con.close()
     return None
