@@ -1,13 +1,68 @@
 from flask import Flask, render_template, url_for, redirect, session
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from forms import hymn_form, hymn_search
 from requests.exceptions import HTTPError
 from helpers.pull_info import pull_data
 import requests
 from helpers.search_engine import search as findr
 from helpers.get_data import get_data
+import os
+from dotenv import load_dotenv
+import logging
+
+load_dotenv()
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "d3f1fdf354bc63bc3c348ddf4abd39fe"
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
+
+# Session security configuration
+app.config["SESSION_COOKIE_HTTPONLY"] = True  # Prevent JavaScript access to session cookie
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"  # CSRF protection
+app.config["SESSION_COOKIE_SECURE"] = os.environ.get("FLASK_ENV") == "production"  # HTTPS only in production
+app.config["PERMANENT_SESSION_LIFETIME"] = 3600  # Session expires after 1 hour
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Configure rate limiting
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://",
+)
+
+
+# Security headers
+@app.after_request
+def set_security_headers(response):
+    """Add security headers to all responses."""
+    # Prevent clickjacking
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    # Prevent MIME type sniffing
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    # Enable XSS protection
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    # HSTS - Force HTTPS (only in production)
+    if os.environ.get("FLASK_ENV") == "production":
+        response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    # Content Security Policy
+    response.headers['Content-Security-Policy'] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net; "
+        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+        "img-src 'self' data: https:; "
+        "font-src 'self' https://cdn.jsdelivr.net; "
+        "frame-ancestors 'self'; "
+        "form-action 'self';"
+    )
+    # Referrer Policy
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    # Permissions Policy
+    response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
+    return response
 
 
 @app.route("/favicon.ico")
@@ -21,6 +76,7 @@ def homepage():
 
 
 @app.route("/himnario", methods=["POST", "GET"])
+@limiter.limit("30 per minute")
 def himnario():
     form = hymn_form()
     if form.validate_on_submit():
@@ -55,12 +111,14 @@ def himnario():
             }
             return redirect(url_for("himnario_play", hymn_number=hymn_number))
         except HTTPError as http_err:
+            logger.error(f"HTTP error in himnario route: {http_err}")
             return render_template(
-                "error_handle.html", message="An HTTP error occurred: " + str(http_err)
+                "error_handle.html", message="Unable to load hymn. Please try again later."
             )
         except Exception as err:
+            logger.error(f"Error in himnario route: {err}", exc_info=True)
             return render_template(
-                "error_handle.html", message="An non-HTTP error occurred: " + str(err)
+                "error_handle.html", message="An error occurred while processing your request. Please try again."
             )
     else:
         return render_template("himnario_search.html", form=form)
@@ -93,6 +151,7 @@ def hdoc():
 
 
 @app.route("/search", methods=["POST", "GET"])
+@limiter.limit("20 per minute")
 def search():
     form = hymn_search()
     if form.validate_on_submit():
@@ -101,8 +160,9 @@ def search():
             results = findr(query)
             return render_template("search_results.html", results=results)
         except Exception as err:
+            logger.error(f"Error in search route: {err}", exc_info=True)
             return render_template(
-                "error_handle.html", message="An error occurred: " + str(err)
+                "error_handle.html", message="An error occurred while searching. Please try again."
             )
     else:
         return render_template("search.html", form=form)

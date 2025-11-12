@@ -1,7 +1,9 @@
 Flask
-Flask_WTF
+Flask-WTF
+Flask-Limiter
 requests
 validators
 WTForms
-sqlite3
 pandas
+python-dotenv
+gunicorn
