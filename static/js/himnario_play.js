@@ -1,3 +1,7 @@
+// Constants
+const LYRICS_SYNC_OFFSET_SECONDS = 1; // Offset for lyrics timing synchronization
+const LYRICS_UPDATE_INTERVAL_MS = 500; // Interval for checking lyrics updates
+
 // Initialize screenLock variable to null
 let screenLock = null;
 
@@ -56,7 +60,7 @@ const res = lyrics;
 
 let i = 0;
 
-const firstTime = res[0].timeStamp - 1;
+const firstTime = res[0].timeStamp - LYRICS_SYNC_OFFSET_SECONDS;
 let hasBreak = false;
 
 // Add a timeupdate event listener to the audio element
@@ -75,11 +79,11 @@ audio.addEventListener(
       document.getElementById("lyrics").hidden = false;
     }
 
-    // Set an interval to update the lyrics every 500 milliseconds
+    // Set an interval to update the lyrics
     const curInterval = setInterval(async () => {
       // If there are more verses to display and there is no break, check if the current time matches the timestamp of the next verse
       if (i < res.length && !hasBreak) {
-        if (currentTime === res[i].timeStamp - 1) {
+        if (currentTime === res[i].timeStamp - LYRICS_SYNC_OFFSET_SECONDS) {
           // Update the lyrics and verse number
           document.getElementById("lyrics").innerHTML = res[i].line.replace(
             /(\.\s+|;\s+|!\s+|\?\s+)/g,
@@ -103,7 +107,7 @@ audio.addEventListener(
         // If there are no more verses or there is a break, clear the interval
         clearInterval(curInterval);
       }
-    }, 500);
+    }, LYRICS_UPDATE_INTERVAL_MS);
   },
   false,
 );

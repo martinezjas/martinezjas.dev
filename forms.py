@@ -1,9 +1,15 @@
+from typing import Any
+
 from flask_wtf import FlaskForm
 from wtforms import RadioField, StringField, SubmitField
 from wtforms.validators import InputRequired, ValidationError
 
+# Constants
+MIN_HYMN_NUMBER = 1
+MAX_HYMN_NUMBER = 613
 
-def validate_hymn_number(form, field):
+
+def validate_hymn_number(form: Any, field: Any) -> None:
     """Validate hymn number field.
 
     Accepts either a number or a search string for hymn titles.
@@ -12,8 +18,10 @@ def validate_hymn_number(form, field):
         # Try to convert to int
         try:
             value = int(field.data)
-            if not (1 <= value <= 613):
-                raise ValidationError("Hymn number must be between 1 and 613")
+            if not (MIN_HYMN_NUMBER <= value <= MAX_HYMN_NUMBER):
+                raise ValidationError(
+                    f"Hymn number must be {MIN_HYMN_NUMBER}-{MAX_HYMN_NUMBER}"
+                )
         except (ValueError, TypeError):
             # If not a number, validate it's a valid title search
             from helpers.search_engine import search as findr
