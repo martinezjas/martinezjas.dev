@@ -2,137 +2,261 @@
 <style>
   main {
     background-image: url(https://source.unsplash.com/n8rK2ALPHTY);
-    height: 100vh;
+    min-height: 100vh;
     width: 100vw;
     background-size: cover;
-    box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.588);
+    background-attachment: fixed;
+    box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.7);
   }
 
   img {
     max-width: 100%;
     height: auto;
   }
+
+  .doc-section {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .warning-box {
+    animation: pulse-border 2s infinite;
+  }
+
+  @keyframes pulse-border {
+    0%,
+    100% {
+      border-color: #eab308;
+    }
+    50% {
+      border-color: #fbbf24;
+    }
+  }
 </style>
 {% endblock %}{% block content %}
-<main class="mb-20 font-lora">
-  <div class="flex flex-col items-center mx-auto text-white">
-    <a class="my-4 btn btn-secondary" href="/himnario" role="button">
-      Go back to search / Regresar a la búsqueda
-    </a>
-    <div class="flex flex-col w-full md:flex-row">
-      <div class="px-4 md:w-1/2">
-        <h3 class="mb-2 text-2xl font-bold">Search Page Documentation</h3>
+<main class="pb-20 font-lora">
+  <div class="flex flex-col items-center px-4 mx-auto text-white max-w-7xl">
+    <div class="py-6 text-center">
+      <h1 class="mb-3 text-5xl font-bold">
+        <i class="bi bi-book"></i>
+        Documentation / Documentación
+      </h1>
+      <p class="mb-4 text-xl">
+        Himnario Adventista Applet User Guide / Guía del Usuario
+      </p>
+      <a
+        class="inline-block px-6 py-3 text-lg font-semibold transition-colors bg-blue-600 rounded-lg hover:bg-blue-700"
+        href="/himnario"
+        role="button"
+      >
+        <i class="bi bi-arrow-left"></i>
+        Go back to search / Regresar a la búsqueda
+      </a>
+    </div>
+    <div class="flex flex-col w-full gap-6 md:flex-row">
+      <div class="flex-1 px-4 doc-section">
+        <h3 class="mb-4 text-3xl font-bold">
+          <i class="bi bi-search"></i>
+          Search Page Documentation
+        </h3>
         <p class="mb-2">In order to search for a hymn...</p>
         <ul class="mb-4 list-disc list-inside">
           <li>
-            Input your desired hymn number in the box on the left. It must be
-            between 1 and 613.
+            <strong>Search by number or title:</strong> Input either a hymn
+            number (1-613) or search by the hymn's title in the search box.
           </li>
           <li>
-            Choose whether you desire to play the Cantado (with singing) or
-            Instrumental versions with the buttons on the right.
+            <strong>Live autocomplete:</strong> As you type, matching hymns
+            will appear in a dropdown below the search box.
           </li>
-          <li>When you are done, hit "Enter" on your keyboard.</li>
+          <li>
+            <strong>Keyboard navigation:</strong> Use the arrow keys (↑/↓) to
+            navigate through search results, press Enter to select, or press
+            Escape to close the dropdown.
+          </li>
+          <li>
+            <strong>Click to select:</strong> You can also click on any search
+            result to select it.
+          </li>
+          <li>
+            <strong>Choose your format:</strong> Select one of three options -
+            Cantado (with singing), Instrumental, or Letra (lyrics only).
+          </li>
+          <li>
+            When you are done, the form will submit automatically when you
+            select a hymn from the dropdown, or press Enter.
+          </li>
         </ul>
-        <hr class="mb-4 border-2 border-gray-300 rounded-full" />
-        <h3 class="mb-2 text-2xl font-bold">Music Page Documentation</h3>
-        <p class="mb-2">
-          The audio should play automatically, and the lyrics will change with
-          the music.
-        </p>
-        <h3 class="mb-2 text-2xl font-bold">
-          DO NOT REFRESH, AS THIS WILL BREAK MUSIC PLAYBACK AND IT WILL NOT
-          PLAY!
+        <hr class="my-6 border-2 border-gray-300 rounded-full" />
+        <h3 class="mb-4 text-3xl font-bold">
+          <i class="bi bi-music-note-beamed"></i>
+          Music Page Documentation
         </h3>
-        <p class="mb-2">Should you desire to change what verse its on...</p>
+        <p class="mb-3 text-lg">
+          <strong>Note:</strong> The hymn title and theme will be displayed
+          first, then the audio will play automatically with synchronized
+          lyrics that change with the music.
+        </p>
+        <div
+          class="p-3 mb-4 bg-yellow-900 border-2 border-yellow-500 rounded warning-box"
+        >
+          <h4 class="mb-1 text-xl font-bold text-yellow-200">
+            ⚠️ Important Warning
+          </h4>
+          <p class="mb-0 text-yellow-100">
+            DO NOT REFRESH the page, as this will break music playback and the
+            hymn will not play!
+          </p>
+        </div>
+        <h4 class="mb-2 text-xl font-bold">Control Buttons (Bottom Left):</h4>
         <ul class="mb-4 list-disc list-inside">
-          <li>Use the left arrow to go to the previous verse.</li>
-          <li>Use the right arrow to go to the next verse.</li>
-          <li>Use the play button to pause or play the music.</li>
           <li>
-            Use the envelope button to report a bug or issue with the page.
+            <strong>Back arrow (←):</strong> Go to the previous verse (disables
+            auto-sync).
+          </li>
+          <li>
+            <strong>Forward arrow (→):</strong> Go to the next verse (disables
+            auto-sync).
+          </li>
+          <li><strong>Play button:</strong> Pause or resume the music.</li>
+          <li>
+            <strong>Envelope button:</strong> Opens a feedback form to report
+            bugs or issues.
           </li>
         </ul>
-        <p class="mb-2">
-          <b>
-            Please note that once you do this, the lyrics will no longer be
-            synced until you go back to the search page.
-          </b>
-        </p>
-        <p class="mb-2">
-          You will be automatically redirected to the search page once the music
-          ends.
-        </p>
-        <p class="mb-2">
-          If you desire to go back to search before the end of the song, click
-          the icon on the bottom left corner, or press the "s" key on your
-          keyboard.
-        </p>
-        <p class="mb-2">
-          To toggle fullscreen, click the icon on the top right corner, or press
-          the "f" key on your keyboard.
-        </p>
+        <h4 class="mb-2 text-xl font-bold">Keyboard Shortcuts:</h4>
+        <ul class="mb-4 list-disc list-inside">
+          <li>
+            <strong>Press "S":</strong> Return to the search page at any time.
+          </li>
+          <li>
+            <strong>Press "F":</strong> Toggle fullscreen mode on/off.
+          </li>
+        </ul>
+        <h4 class="mb-2 text-xl font-bold">Navigation:</h4>
+        <ul class="mb-4 list-disc list-inside">
+          <li>
+            <strong>Manual verse control:</strong> Using the arrow buttons will
+            disable automatic lyric synchronization until you return to the
+            search page.
+          </li>
+          <li>
+            <strong>Automatic redirect:</strong> You will be automatically
+            redirected to the search page when the hymn ends.
+          </li>
+          <li>
+            <strong>Quick return:</strong> Click the logo icon in the bottom
+            left corner to immediately return to search.
+          </li>
+        </ul>
       </div>
-      <div class="md:w-1/12"></div>
-      <div class="px-4 md:w-1/2">
-        <h3 class="mb-2 text-2xl font-bold">
+      <div class="flex-1 px-4 doc-section">
+        <h3 class="mb-4 text-3xl font-bold">
+          <i class="bi bi-search"></i>
           Documentación de la Página de Búsqueda
         </h3>
         <p class="mb-2">Para buscar un himno...</p>
         <ul class="mb-4 list-disc list-inside">
           <li>
-            Introduzca el número de himno que desee en la casilla de la
-            izquierda. Debe ser entre 1 y 613.
+            <strong>Buscar por número o título:</strong> Ingrese un número de
+            himno (1-613) o busque por el título del himno en el cuadro de
+            búsqueda.
           </li>
           <li>
-            Elija si desea tocar la versión Cantado o Instrumental con los
-            botones de la derecha.
+            <strong>Autocompletado en vivo:</strong> A medida que escribe, los
+            himnos coincidentes aparecerán en un menú desplegable debajo del
+            cuadro de búsqueda.
           </li>
-          <li>Cuando hayas terminado, pulsa "Enter" en el teclado.</li>
+          <li>
+            <strong>Navegación con teclado:</strong> Use las teclas de flecha
+            (↑/↓) para navegar por los resultados de búsqueda, presione Enter
+            para seleccionar, o presione Escape para cerrar el menú
+            desplegable.
+          </li>
+          <li>
+            <strong>Haga clic para seleccionar:</strong> También puede hacer
+            clic en cualquier resultado de búsqueda para seleccionarlo.
+          </li>
+          <li>
+            <strong>Elija su formato:</strong> Seleccione una de tres opciones
+            - Cantado (con canto), Instrumental, o Letra (solo letras).
+          </li>
+          <li>
+            Cuando haya terminado, el formulario se enviará automáticamente
+            cuando seleccione un himno del menú desplegable, o presione Enter.
+          </li>
         </ul>
-        <hr class="mb-4 border-2 border-gray-300 rounded-full" />
-        <h3 class="mb-2 text-2xl font-bold">
+        <hr class="my-6 border-2 border-gray-300 rounded-full" />
+        <h3 class="mb-4 text-3xl font-bold">
+          <i class="bi bi-music-note-beamed"></i>
           Documentación de la Página de Música
         </h3>
-        <p class="mb-2">
-          El audio debería reproducirse automáticamente, y la letra cambiará con
-          la música.
+        <p class="mb-3 text-lg">
+          <strong>Nota:</strong> El título del himno y el tema se mostrarán
+          primero, luego el audio se reproducirá automáticamente con letras
+          sincronizadas que cambian con la música.
         </p>
-        <h3 class="mb-2 text-2xl font-bold">
-          ¡NO REFRESQUE LA PÁGINA, YA QUE ESTO INTERRUMPIRÁ LA REPRODUCCIÓN DE
-          LA MÚSICA Y NO SE REPRODUCIRÁ!
-        </h3>
-        <p class="mb-2">Si desea cambiar el verso en el que está...</p>
+        <div
+          class="p-3 mb-4 bg-yellow-900 border-2 border-yellow-500 rounded warning-box"
+        >
+          <h4 class="mb-1 text-xl font-bold text-yellow-200">
+            ⚠️ Advertencia Importante
+          </h4>
+          <p class="mb-0 text-yellow-100">
+            ¡NO REFRESQUE la página, ya que esto interrumpirá la reproducción de
+            música y el himno no se reproducirá!
+          </p>
+        </div>
+        <h4 class="mb-2 text-xl font-bold">
+          Botones de Control (Inferior Izquierda):
+        </h4>
         <ul class="mb-4 list-disc list-inside">
-          <li>Utilice la flecha izquierda para ir al verso anterior.</li>
-          <li>Utilice la flecha derecha para ir al verso siguiente.</li>
           <li>
-            Utilice el botón de reproducción para pausar o reproducir la música.
+            <strong>Flecha atrás (←):</strong> Ir al verso anterior (desactiva
+            la sincronización automática).
           </li>
           <li>
-            Utilice el botón de sobre para informar de un error o problema con
-            la página.
+            <strong>Flecha adelante (→):</strong> Ir al verso siguiente
+            (desactiva la sincronización automática).
+          </li>
+          <li>
+            <strong>Botón de reproducción:</strong> Pausar o reanudar la música.
+          </li>
+          <li>
+            <strong>Botón de sobre:</strong> Abre un formulario de comentarios
+            para reportar errores o problemas.
           </li>
         </ul>
-        <p class="mb-2">
-          <b>
-            Ten en cuenta que, una vez hecho esto, las letras dejarán de estar
-            sincronizadas hasta que vuelvas a la página de búsqueda.
-          </b>
-        </p>
-        <p class="mb-2">
-          Se le redirigirá automáticamente a la página de búsqueda una vez que
-          la música termine.
-        </p>
-        <p class="mb-2">
-          Si desea volver a buscar antes del final de la canción haga clic en el
-          icono de la esquina inferior izquierda, o pulse la tecla "s" de tu
-          teclado.
-        </p>
-        <p class="mb-2">
-          Para activar el modo de pantalla completa, haz clic en el icono de la
-          esquina superior derecha o pulsa la tecla "f" del teclado.
-        </p>
+        <h4 class="mb-2 text-xl font-bold">Atajos de Teclado:</h4>
+        <ul class="mb-4 list-disc list-inside">
+          <li>
+            <strong>Presione "S":</strong> Regresar a la página de búsqueda en
+            cualquier momento.
+          </li>
+          <li>
+            <strong>Presione "F":</strong> Activar/desactivar el modo de
+            pantalla completa.
+          </li>
+        </ul>
+        <h4 class="mb-2 text-xl font-bold">Navegación:</h4>
+        <ul class="mb-4 list-disc list-inside">
+          <li>
+            <strong>Control manual de versos:</strong> Usar los botones de
+            flecha desactivará la sincronización automática de letras hasta que
+            regrese a la página de búsqueda.
+          </li>
+          <li>
+            <strong>Redirección automática:</strong> Será redirigido
+            automáticamente a la página de búsqueda cuando termine el himno.
+          </li>
+          <li>
+            <strong>Retorno rápido:</strong> Haga clic en el ícono del logotipo
+            en la esquina inferior izquierda para regresar inmediatamente a la
+            búsqueda.
+          </li>
+        </ul>
       </div>
     </div>
   </div>
