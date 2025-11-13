@@ -5,6 +5,32 @@ const LYRICS_UPDATE_INTERVAL_MS = 500; // Interval for checking lyrics updates
 // Initialize screenLock variable to null
 let screenLock = null;
 
+/**
+ * Safely set text content with line breaks after punctuation.
+ * Prevents XSS by using textContent instead of innerHTML.
+ * @param {HTMLElement} element - The element to update
+ * @param {string} text - The text content to display
+ */
+function setSafeTextWithLineBreaks(element, text) {
+  // Clear existing content
+  element.textContent = '';
+
+  // Split text on punctuation followed by spaces
+  const parts = text.split(/(\.\s+|;\s+|!\s+|\?\s+)/g);
+
+  parts.forEach((part, index) => {
+    if (part) {
+      // Add text node
+      element.appendChild(document.createTextNode(part));
+
+      // Add line break after punctuation (but not after the last part)
+      if (index < parts.length - 1 && /(\.\s+|;\s+|!\s+|\?\s+)/.test(part)) {
+        element.appendChild(document.createElement('br'));
+      }
+    }
+  });
+}
+
 // Define release function to release screen lock
 function release() {
   if (screenLock !== null) {
@@ -85,15 +111,15 @@ audio.addEventListener(
       if (i < res.length && !hasBreak) {
         if (currentTime === res[i].timeStamp - LYRICS_SYNC_OFFSET_SECONDS) {
           // Update the lyrics and verse number
-          document.getElementById("lyrics").innerHTML = res[i].line.replace(
-            /(\.\s+|;\s+|!\s+|\?\s+)/g,
-            "$1<br>",
+          setSafeTextWithLineBreaks(
+            document.getElementById("lyrics"),
+            res[i].line
           );
           let verseNumber = res[i].verseNumber;
           if (verseNumber === 0) {
             verseNumber = "Coro";
           }
-          document.getElementById("verseno").innerHTML = verseNumber;
+          document.getElementById("verseno").textContent = verseNumber;
 
           // Move to the next verse
           i += 1;
@@ -210,15 +236,15 @@ function goBack() {
   }
 
   // Update the lyrics and verse number
-  document.getElementById("lyrics").innerHTML = res[i].line.replace(
-    /(\.\s+|;\s+|!\s+|\?\s+)/g,
-    "$1<br>",
+  setSafeTextWithLineBreaks(
+    document.getElementById("lyrics"),
+    res[i].line
   );
   let verseNumber = res[i].verseNumber;
   if (verseNumber === 0) {
     verseNumber = "Coro";
   }
-  document.getElementById("verseno").innerHTML = verseNumber;
+  document.getElementById("verseno").textContent = verseNumber;
 
   // Show or hide the end icon depending on whether this is the last verse
   if (i + 1 === res.length) {
@@ -248,15 +274,15 @@ function goForward() {
   }
 
   // Update the lyrics and verse number
-  document.getElementById("lyrics").innerHTML = res[i].line.replace(
-    /(\.\s+|;\s+|!\s+|\?\s+)/g,
-    "$1<br>",
+  setSafeTextWithLineBreaks(
+    document.getElementById("lyrics"),
+    res[i].line
   );
   let verseNumber = res[i].verseNumber;
   if (verseNumber === 0) {
     verseNumber = "Coro";
   }
-  document.getElementById("verseno").innerHTML = verseNumber;
+  document.getElementById("verseno").textContent = verseNumber;
 
   // Show or hide the end icon depending on whether this is the last verse
   if (i + 1 === res.length) {
