@@ -4,6 +4,5 @@ Flask-Limiter
 requests
 validators
 WTForms
-pandas
 python-dotenv
 gunicorn
