@@ -1,5 +1,6 @@
 import logging
 import os
+from functools import lru_cache
 from typing import Optional
 
 import requests
@@ -10,10 +11,19 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 
+@lru_cache(maxsize=128)
 def get_photo_data(photo_id: str) -> Optional[str]:
     """
-    Given a photo ID, returns the corresponding photo data.
-    Returns None if the request fails.
+    Get photo URL from Unsplash API with caching.
+
+    Results are cached to prevent redundant API calls for the same photo_id.
+    Cache size is limited to 128 most recent unique photo IDs.
+
+    Args:
+        photo_id: The Unsplash photo ID
+
+    Returns:
+        The full-size photo URL, or None if the request fails
     """
     try:
         response = requests.get(

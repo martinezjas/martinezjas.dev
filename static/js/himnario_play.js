@@ -206,6 +206,37 @@ const playButton = document.getElementById("play");
 // Initialize a flag to track whether the play button has been clicked before
 let firstClick = false;
 
+/**
+ * Show lyrics view and hide title/themes.
+ */
+function showLyricsView() {
+  document.getElementById("title").hidden = true;
+  document.getElementById("themes").hidden = true;
+  document.getElementById("title-div").style.position = "fixed";
+  document.getElementById("lyrics-div").style.position = "relative";
+  document.getElementById("lyrics").hidden = false;
+}
+
+/**
+ * Update the displayed lyrics and verse number.
+ * @param {number} verseIndex - The index of the verse to display
+ */
+function updateLyricsDisplay(verseIndex) {
+  setSafeTextWithLineBreaks(
+    document.getElementById("lyrics"),
+    res[verseIndex].line
+  );
+
+  let verseNumber = res[verseIndex].verseNumber;
+  if (verseNumber === 0) {
+    verseNumber = "Coro";
+  }
+  document.getElementById("verseno").textContent = verseNumber;
+
+  // Show or hide the end icon depending on whether this is the last verse
+  document.getElementById("end_icon").hidden = (verseIndex + 1 !== res.length);
+}
+
 // Define a function to handle the play button click event
 function play() {
   // If this is the first click, play the audio and set the firstClick flag to true
@@ -223,47 +254,21 @@ function goBack() {
   // Set the hasBreak flag to true to indicate that there is a break in the lyrics
   hasBreak = true;
 
-  // Hide the title and themes and show the lyrics
-  document.getElementById("title").hidden = true;
-  document.getElementById("themes").hidden = true;
-  document.getElementById("title-div").style.position = "fixed";
-  document.getElementById("lyrics-div").style.position = "relative";
-  document.getElementById("lyrics").hidden = false;
+  showLyricsView();
 
   // Move to the previous verse
   if (i > 0) {
     i -= 1;
   }
 
-  // Update the lyrics and verse number
-  setSafeTextWithLineBreaks(
-    document.getElementById("lyrics"),
-    res[i].line
-  );
-  let verseNumber = res[i].verseNumber;
-  if (verseNumber === 0) {
-    verseNumber = "Coro";
-  }
-  document.getElementById("verseno").textContent = verseNumber;
-
-  // Show or hide the end icon depending on whether this is the last verse
-  if (i + 1 === res.length) {
-    document.getElementById("end_icon").hidden = false;
-  } else {
-    document.getElementById("end_icon").hidden = true;
-  }
+  updateLyricsDisplay(i);
 }
 
 function goForward() {
   // Set the hasBreak flag to true to indicate that there is a break in the lyrics
   hasBreak = true;
 
-  // Hide the title and themes and show the lyrics
-  document.getElementById("title").hidden = true;
-  document.getElementById("themes").hidden = true;
-  document.getElementById("title-div").style.position = "fixed";
-  document.getElementById("lyrics-div").style.position = "relative";
-  document.getElementById("lyrics").hidden = false;
+  showLyricsView();
 
   // Move to the next verse
   if (i < res.length && firstClick) {
@@ -273,23 +278,7 @@ function goForward() {
     firstClick = true;
   }
 
-  // Update the lyrics and verse number
-  setSafeTextWithLineBreaks(
-    document.getElementById("lyrics"),
-    res[i].line
-  );
-  let verseNumber = res[i].verseNumber;
-  if (verseNumber === 0) {
-    verseNumber = "Coro";
-  }
-  document.getElementById("verseno").textContent = verseNumber;
-
-  // Show or hide the end icon depending on whether this is the last verse
-  if (i + 1 === res.length) {
-    document.getElementById("end_icon").hidden = false;
-  } else {
-    document.getElementById("end_icon").hidden = true;
-  }
+  updateLyricsDisplay(i);
 }
 
 // Add click event listeners to the play, left, and right buttons
