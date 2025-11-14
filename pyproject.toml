@@ -1,0 +1,23 @@
+[project]
+name = "martinezjas-dev"
+version = "0.1.0"
+description = "Personal website with Spanish hymnal search and playback functionality"
+requires-python = ">=3.10"
+dependencies = [
+    "Flask",
+    "Flask-WTF",
+    "Flask-Limiter",
+    "requests",
+    "validators",
+    "WTForms",
+    "python-dotenv",
+    "gunicorn",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit",
+    "black",
+    "isort",
+    "flake8",
+]

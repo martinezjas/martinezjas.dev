@@ -1,8 +1,0 @@
-Flask
-Flask-WTF
-Flask-Limiter
-requests
-validators
-WTForms
-python-dotenv
-gunicorn
