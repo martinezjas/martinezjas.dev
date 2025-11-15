@@ -22,6 +22,11 @@ from helpers.search_engine import search as findr
 
 load_dotenv()
 
+# Configuration constants
+SESSION_TIMEOUT_SECONDS = 3600  # 1 hour
+RATE_LIMIT_HIMNARIO = "30 per minute"
+RATE_LIMIT_AUTOCOMPLETE = "60 per minute"
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
@@ -33,7 +38,7 @@ app.config["SESSION_COOKIE_SAMESITE"] = "Lax"  # CSRF protection
 app.config["SESSION_COOKIE_SECURE"] = (
     os.environ.get("FLASK_ENV") == "production"
 )  # HTTPS only in production
-app.config["PERMANENT_SESSION_LIFETIME"] = 3600  # Session expires after 1 hour
+app.config["PERMANENT_SESSION_LIFETIME"] = SESSION_TIMEOUT_SECONDS
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -98,7 +103,7 @@ def homepage():
 
 
 @app.route("/himnario", methods=["POST", "GET"])
-@limiter.limit("30 per minute")
+@limiter.limit(RATE_LIMIT_HIMNARIO)
 def himnario():
     form = hymn_form()
     if form.validate_on_submit():
@@ -201,7 +206,7 @@ def hdoc():
 
 
 @app.route("/api/search/autocomplete", methods=["GET"])
-@limiter.limit("60 per minute")
+@limiter.limit(RATE_LIMIT_AUTOCOMPLETE)
 def search_autocomplete():
     """API endpoint for live search autocomplete."""
     query = request.args.get("q", "").strip()

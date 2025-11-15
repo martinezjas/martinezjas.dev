@@ -1,5 +1,35 @@
+// Constants
+const LYRICS_SYNC_OFFSET_SECONDS = 1; // Offset for lyrics timing synchronization
+const LYRICS_UPDATE_INTERVAL_MS = 500; // Interval for checking lyrics updates
+
 // Initialize screenLock variable to null
 let screenLock = null;
+
+/**
+ * Safely set text content with line breaks after punctuation.
+ * Prevents XSS by using textContent instead of innerHTML.
+ * @param {HTMLElement} element - The element to update
+ * @param {string} text - The text content to display
+ */
+function setSafeTextWithLineBreaks(element, text) {
+  // Clear existing content
+  element.textContent = '';
+
+  // Split text on punctuation followed by spaces
+  const parts = text.split(/(\.\s+|;\s+|!\s+|\?\s+)/g);
+
+  parts.forEach((part, index) => {
+    if (part) {
+      // Add text node
+      element.appendChild(document.createTextNode(part));
+
+      // Add line break after punctuation (but not after the last part)
+      if (index < parts.length - 1 && /(\.\s+|;\s+|!\s+|\?\s+)/.test(part)) {
+        element.appendChild(document.createElement('br'));
+      }
+    }
+  });
+}
 
 // Define release function to release screen lock
 function release() {
@@ -56,7 +86,7 @@ const res = lyrics;
 
 let i = 0;
 
-const firstTime = res[0].timeStamp - 1;
+const firstTime = res[0].timeStamp - LYRICS_SYNC_OFFSET_SECONDS;
 let hasBreak = false;
 
 // Add a timeupdate event listener to the audio element
@@ -75,21 +105,21 @@ audio.addEventListener(
       document.getElementById("lyrics").hidden = false;
     }
 
-    // Set an interval to update the lyrics every 500 milliseconds
+    // Set an interval to update the lyrics
     const curInterval = setInterval(async () => {
       // If there are more verses to display and there is no break, check if the current time matches the timestamp of the next verse
       if (i < res.length && !hasBreak) {
-        if (currentTime === res[i].timeStamp - 1) {
+        if (currentTime === res[i].timeStamp - LYRICS_SYNC_OFFSET_SECONDS) {
           // Update the lyrics and verse number
-          document.getElementById("lyrics").innerHTML = res[i].line.replace(
-            /(\.\s+|;\s+|!\s+|\?\s+)/g,
-            "$1<br>",
+          setSafeTextWithLineBreaks(
+            document.getElementById("lyrics"),
+            res[i].line
           );
           let verseNumber = res[i].verseNumber;
           if (verseNumber === 0) {
             verseNumber = "Coro";
           }
-          document.getElementById("verseno").innerHTML = verseNumber;
+          document.getElementById("verseno").textContent = verseNumber;
 
           // Move to the next verse
           i += 1;
@@ -103,7 +133,7 @@ audio.addEventListener(
         // If there are no more verses or there is a break, clear the interval
         clearInterval(curInterval);
       }
-    }, 500);
+    }, LYRICS_UPDATE_INTERVAL_MS);
   },
   false,
 );
@@ -176,6 +206,37 @@ const playButton = document.getElementById("play");
 // Initialize a flag to track whether the play button has been clicked before
 let firstClick = false;
 
+/**
+ * Show lyrics view and hide title/themes.
+ */
+function showLyricsView() {
+  document.getElementById("title").hidden = true;
+  document.getElementById("themes").hidden = true;
+  document.getElementById("title-div").style.position = "fixed";
+  document.getElementById("lyrics-div").style.position = "relative";
+  document.getElementById("lyrics").hidden = false;
+}
+
+/**
+ * Update the displayed lyrics and verse number.
+ * @param {number} verseIndex - The index of the verse to display
+ */
+function updateLyricsDisplay(verseIndex) {
+  setSafeTextWithLineBreaks(
+    document.getElementById("lyrics"),
+    res[verseIndex].line
+  );
+
+  let verseNumber = res[verseIndex].verseNumber;
+  if (verseNumber === 0) {
+    verseNumber = "Coro";
+  }
+  document.getElementById("verseno").textContent = verseNumber;
+
+  // Show or hide the end icon depending on whether this is the last verse
+  document.getElementById("end_icon").hidden = (verseIndex + 1 !== res.length);
+}
+
 // Define a function to handle the play button click event
 function play() {
   // If this is the first click, play the audio and set the firstClick flag to true
@@ -193,47 +254,21 @@ function goBack() {
   // Set the hasBreak flag to true to indicate that there is a break in the lyrics
   hasBreak = true;
 
-  // Hide the title and themes and show the lyrics
-  document.getElementById("title").hidden = true;
-  document.getElementById("themes").hidden = true;
-  document.getElementById("title-div").style.position = "fixed";
-  document.getElementById("lyrics-div").style.position = "relative";
-  document.getElementById("lyrics").hidden = false;
+  showLyricsView();
 
   // Move to the previous verse
   if (i > 0) {
     i -= 1;
   }
 
-  // Update the lyrics and verse number
-  document.getElementById("lyrics").innerHTML = res[i].line.replace(
-    /(\.\s+|;\s+|!\s+|\?\s+)/g,
-    "$1<br>",
-  );
-  let verseNumber = res[i].verseNumber;
-  if (verseNumber === 0) {
-    verseNumber = "Coro";
-  }
-  document.getElementById("verseno").innerHTML = verseNumber;
-
-  // Show or hide the end icon depending on whether this is the last verse
-  if (i + 1 === res.length) {
-    document.getElementById("end_icon").hidden = false;
-  } else {
-    document.getElementById("end_icon").hidden = true;
-  }
+  updateLyricsDisplay(i);
 }
 
 function goForward() {
   // Set the hasBreak flag to true to indicate that there is a break in the lyrics
   hasBreak = true;
 
-  // Hide the title and themes and show the lyrics
-  document.getElementById("title").hidden = true;
-  document.getElementById("themes").hidden = true;
-  document.getElementById("title-div").style.position = "fixed";
-  document.getElementById("lyrics-div").style.position = "relative";
-  document.getElementById("lyrics").hidden = false;
+  showLyricsView();
 
   // Move to the next verse
   if (i < res.length && firstClick) {
@@ -243,23 +278,7 @@ function goForward() {
     firstClick = true;
   }
 
-  // Update the lyrics and verse number
-  document.getElementById("lyrics").innerHTML = res[i].line.replace(
-    /(\.\s+|;\s+|!\s+|\?\s+)/g,
-    "$1<br>",
-  );
-  let verseNumber = res[i].verseNumber;
-  if (verseNumber === 0) {
-    verseNumber = "Coro";
-  }
-  document.getElementById("verseno").innerHTML = verseNumber;
-
-  // Show or hide the end icon depending on whether this is the last verse
-  if (i + 1 === res.length) {
-    document.getElementById("end_icon").hidden = false;
-  } else {
-    document.getElementById("end_icon").hidden = true;
-  }
+  updateLyricsDisplay(i);
 }
 
 // Add click event listeners to the play, left, and right buttons
